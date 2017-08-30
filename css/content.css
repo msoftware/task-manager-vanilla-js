@@ -189,23 +189,17 @@
 /* Edit Task Panel - Content */
 
 .edit-task-panel .content fieldset {
-    border: 0px;
     padding: 55px 30px 55px 20px;
 }
 
-.edit-task-panel .content fieldset .title,
-.edit-task-panel .content fieldset .description {
+.edit-task-panel .content fieldset input,
+.edit-task-panel .content fieldset textarea {
     display: block;
     width: 100%;
-    outline: none;
-    color: #9ca6af;
-    border: 1px solid #d5dce0;
-    -webkit-border-radius: 3px;
-       -moz-border-radius: 3px;
-            border-radius: 3px;
 }
 
-.edit-task-panel .content fieldset .title {
+
+.edit-task-panel .content fieldset input {
     height: 42px;
     padding: 0px 10px 0px 50px;
     margin-bottom: 5px;
@@ -213,19 +207,18 @@
     background: url(../img/icons/checked-30x30.png) 9px center no-repeat;
 }
 
-.edit-task-panel .content fieldset .description-area {
+.edit-task-panel .content fieldset .description {
     padding-left: 40px;
 }
 
-.edit-task-panel .content fieldset .description {
+.edit-task-panel .content fieldset .description textarea {
     font-weight: normal;
     padding: 10px;
-    resize: vertical;
 }
 
 /* Edit Task Panel - Comment */
 
-.edit-task-panel .comment-area {
+.edit-task-panel .comment {
     height: 120px;
     position: absolute;
     left: 0;
@@ -236,26 +229,21 @@
     padding: 10px 30px;
 }
 
-.edit-task-panel .comment-area .profile-image {
+.edit-task-panel .comment img {
     float: left;
     display: inline-block;
     margin-right: 10px;
 }
 
-.edit-task-panel .comment-area fieldset {
-    border: 0;
+.edit-task-panel .comment fieldset {
     height: 100px;
 }
 
-.edit-task-panel .comment-area fieldset .comment {
+.edit-task-panel .comment fieldset textarea {
     width: 100%;
     height: inherit;
     padding: 10px;
-    color: #9ca6af;
     border: 1px solid #d5dce0;
-    outline: none;
-    -webkit-border-radius: 3px;
-       -moz-border-radius: 3px;
-            border-radius: 3px;
+    font-weight: normal;
 }
 

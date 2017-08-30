@@ -1,0 +1,32 @@
+form fieldset {
+    border: 0px;
+}
+
+form input,
+form textarea {
+    color: #9ca6af;
+    border: 1px solid #d5dce0;
+    outline: none;
+    border: 1px solid #fff;
+    -webkit-border-radius: 3px;
+       -moz-border-radius: 3px;
+            border-radius: 3px;
+}
+
+form input:hover,
+form textarea:hover {
+    border: 1px solid #d5dce0;
+}
+
+form input:focus,
+form textarea:focus {
+    color: #151b26 !important;
+    border-color: #87abbf !important;
+    -webkit-box-shadow: inset 0px 1px 1px 0px rgba(193, 229, 247, 0.9);
+       -moz-box-shadow: inset 0px 1px 1px 0px rgba(193, 229, 247, 0.9);
+            box-shadow: inset 0px 1px 1px 0px rgba(193, 229, 247, 0.9);
+}
+
+form textarea {
+    resize: none;
+}

@@ -62,7 +62,6 @@ header .search {
 }
 
 header .search fieldset {
-    border: none;
     height: inherit;
     padding: 5px 0px;
 }
