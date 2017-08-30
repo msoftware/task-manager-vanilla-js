@@ -22,12 +22,12 @@
                 </div>
 
                 <div class="account">
-                    <a href="#">Personal Projects <img src="img/profile-200x200.jpg"></a>
+                    <a href="#">Personal Projects <img src="img/profile-200x200.jpg" class="profile-image"></a>
                 </div>
             </div>
 
             <div class="search">
-                <form>
+                <form method="get">
                     <fieldset>
                         <input type="text" name="search" value="Search">
                     </fieldset>
@@ -37,7 +37,7 @@
 
         <div class="title">
             <h1>
-                <img src="img/profile-200x200.jpg">
+                <img src="img/profile-200x200.jpg" class="profile-image">
                 My Personal Tasks
                 <span class="caret-down"></span>
             </h1>
@@ -45,8 +45,67 @@
         </div>
     </header>
 
-    <section class="task-panel">
-        
+    <section class="panels">
+        <div class="panel task-panel editing-task">
+            <div class="toolbar">
+                <button class="btn-add-task">Add Task</button>
+                <button class="btn-settings"></button>
+            </div>
+            <div class="task-list">
+                <ul>
+                    <li class="task">Work it harder</li>
+                    <li class="task">Work it better</li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="panel edit-task-panel">
+            <div class="toolbar">
+                <div class="user-info">
+                    <img src="img/profile-200x200.jpg" class="profile-image"> Thomas Anderson
+                    <span class="circle"></span>
+                </div>
+                <div class="task-options">
+                    <button class="btn btn-schedule"></button>
+                    <span class="due-date">Due Date</span>
+                    <button class="btn btn-like"></button>
+                    <button class="btn btn-sort"></button>
+                    <button class="btn btn-attach"></button>
+                    <button class="btn btn-more-options"></button>
+                </div>
+                <button class="btn-close"></button>
+            </div>
+
+            <div class="content">
+                <form method="post">
+                    <fieldset>
+                        <input type="text" name="title" class="title" value="New Task">
+                        <div class="description-area">
+                            <textarea name="description" class="description">Description</textarea>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+
+            <div class="comment-area">
+                <img src="img/profile-200x200.jpg" class="profile-image">
+                <form>
+                    <fieldset>
+                        <textarea name="comment" class="comment">Write a comment...</textarea>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
     </section>
 </body>
 </html>

@@ -115,15 +115,8 @@ header .user-options .account {
     padding: 0px 20px;
 }
 
-header .user-options .account img {
-    vertical-align: middle;
+header .user-options .account .profile-image {
     margin-left: 5px;
-    width: 30px;
-    height: 30px;
-    border: 1px solid #848f99;
-    -webkit-border-radius: 50%;
-       -moz-border-radius: 50%;
-            border-radius: 50%;
 }
 
 /* Title */
@@ -145,16 +138,6 @@ header .title h1 {
     color: #151b26;
     font-size: 21px;
     cursor: pointer;
-}
-
-header .title h1 img {
-    vertical-align: middle;
-    width: 30px;
-    height: 30px;
-    border: 1px solid #848f99;
-    -webkit-border-radius: 50%;
-       -moz-border-radius: 50%;
-            border-radius: 50%;
 }
 
 header .title h1 span.caret-down {

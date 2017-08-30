@@ -17,3 +17,17 @@ body {
        -moz-background-size: cover;
             background-size: cover;
 }
+
+.hide {
+    display: none;
+}
+
+.profile-image {
+    vertical-align: middle;
+    width: 30px;
+    height: 30px;
+    border: 1px solid #848f99;
+    -webkit-border-radius: 50%;
+       -moz-border-radius: 50%;
+            border-radius: 50%;
+}
