@@ -75,10 +75,6 @@
 
 /* Task Panel - Task List */
 
-.task-panel .task-list {
-    margin: 0px 30px;
-}
-
 .task-panel .task-list ul {
     list-style-type: none;
 }
@@ -86,14 +82,39 @@
 .task-panel .task-list ul li {
     display: block;
     font-weight: normal;
-    border-bottom: 1px solid #e0e6e8;
     height: 35px;
     line-height: 35px;
-    padding-left: 30px;
 }
 
 .task-panel .task-list ul li.task {
+    cursor: pointer;
+}
+
+.task-panel .task-list ul li span {
+    display: inherit;
+    line-height: inherit;
+    height: inherit;
+    border-bottom: 1px solid #e0e6e8;
+    margin: 0px 30px;
+    padding-left: 30px;
+}
+
+.task-panel .task-list ul li.task > span {
     background: url(../img/icons/checked-20x20.png) left center no-repeat;
+}
+
+.task-panel .task-list ul li.task:hover {
+    background-color: #edf8ff;
+}
+
+.task-panel .task-list ul li.active {
+    background: #edf8ff url(../img/icons/caret-right-16x16.png) right 13px center no-repeat;
+}
+
+.task-panel .task-list ul li.task:hover > span,
+.task-panel .task-list ul li.active > span {
+    background: url(../img/icons/circle-16x16.png) center right no-repeat;
+    border: 0px;
 }
 
 /* Edit Task Panel */
