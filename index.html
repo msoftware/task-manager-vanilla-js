@@ -6,6 +6,7 @@
     <title>Task Manager Vanilla JS</title>
 
     <link rel="stylesheet" href="css/styles.css">
+    <script type="text/javascript" src="js/functions.js"></script>
     <script type="text/javascript" src="js/scripts.js"></script>
 </head>
 <body>
@@ -47,7 +48,7 @@
     </header>
 
     <section class="panels">
-        <div class="panel task-panel editing-task">
+        <div class="panel task-panel">
             <div class="toolbar">
                 <button class="btn-add-task">Add Task</button>
                 <button class="btn-settings"></button>
@@ -55,12 +56,14 @@
 
             <div class="task-list">
                 <ul>
-                    <li class="task active">
+<!--                     <li class="task active">
                         <span>Work it harder</span>
                     </li>
                     <li class="task">
                         <span>Work it better</span>
-                    </li>
+                    </li> -->
+                    <li><span></span></li>
+                    <li><span></span></li>
                     <li><span></span></li>
                     <li><span></span></li>
                     <li><span></span></li>
@@ -75,7 +78,7 @@
             </div>
         </div>
 
-        <div class="panel edit-task-panel">
+        <div class="panel edit-task-panel hide">
             <div class="toolbar">
                 <div class="user-info">
                     <img src="img/profile-200x200.jpg" class="profile-image"> Thomas Anderson
