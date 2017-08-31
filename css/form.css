@@ -13,6 +13,11 @@ form textarea {
             border-radius: 3px;
 }
 
+form input::-webkit-input-placeholder,
+form textarea::-webkit-input-placeholder {
+    color: #9ca6af;
+}
+
 form input:hover,
 form textarea:hover {
     border: 1px solid #d5dce0;

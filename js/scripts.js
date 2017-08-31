@@ -5,11 +5,12 @@ ready(() => {
 });
 
 class Task {
-    constructor(title, description) {
+    constructor(id, title, description) {
         this.element = this.getElement();
 
-        this.title = title;
-        this.description = description;
+        this.id = id || Number(new Date()).toString(36);
+        this.title = title || '';
+        this.description = description || '';
     }
 
     get title() {
@@ -30,6 +31,23 @@ class Task {
 
         return li;
     }
+
+    save() {
+        localStorage.setItem(this.id, this.serialize());
+    }
+
+    serialize() {
+        return JSON.stringify({
+            id: this.id,
+            title: this.title,
+            description: this.description
+        });
+    }
+
+    static deserialize(str) {
+        let obj = JSON.parse(str);
+        return new Task(obj.id, obj.title, obj.description);
+    }
 }
 
 class TaskEditPanel {
@@ -49,10 +67,8 @@ class TaskEditPanel {
         title.value = task.title;
         title.focus();
 
-        if (task.description !== '') {
-            let description = this.element.querySelector('textarea');
-            description.innerHTML = task.description;
-        }
+        let description = this.element.querySelector('textarea');
+        description.value = task.description;
     }
 
     getElement() {
@@ -60,14 +76,33 @@ class TaskEditPanel {
     }
 
     setUpListeners() {
-        let closeBtn = this.element.querySelector('.btn-close');
-        closeBtn.addEventListener('click', () => {
+        let closeButton = this.element.querySelector('.btn-close');
+        closeButton.addEventListener('click', () => {
             EventBus.dispatch('closeTaskEditPanel');
         });
 
         let titleInput = this.element.querySelector('input');
-        titleInput.addEventListener('keyup', () => {
+        titleInput.addEventListener('keyup', (event) => {
+            if (event.keyCode === 13) {
+                this.activeTask.title = titleInput.value;
+                this.activeTask.save();
+            }
+        });
+        titleInput.addEventListener('blur', () => {
             this.activeTask.title = titleInput.value;
+            this.activeTask.save();
+        });
+
+        let descriptionTextarea = this.element.querySelector('textarea');
+        descriptionTextarea.addEventListener('keyup', (event) => {
+            if (event.keyCode === 13) {
+                this.activeTask.description = descriptionTextarea.value;
+                this.activeTask.save();
+            }
+        });
+        descriptionTextarea.addEventListener('blur', () => {
+            this.activeTask.description = descriptionTextarea.value;
+            this.activeTask.save();
         });
     }
 
@@ -87,28 +122,40 @@ class TaskListPanel {
 
         this.tasks = [];
         this.activeTask = null;
+
+        this.loadTasks();
     }
 
     getElement() {
-        return document.querySelector('.task-list ul');
+        return document.querySelector('.task-list-panel');
     }
 
     setUpListeners() {
         let addTaskButton = document.querySelector('.task-list-panel .toolbar .btn-add-task');
         addTaskButton.addEventListener('click', () => {
-            this.addTask(new Task('', ''));
+            let task = new Task();
+            this.addTask(task);
+            this.activateTask(task);
+        });
+    }
+
+    loadTasks() {
+        let keys = Object.keys(localStorage);
+        keys.forEach((key) => {
+            let task = Task.deserialize(localStorage[key]);
+            this.addTask(task);
         });
     }
 
     addTask(task) {
         this.tasks.push(task);
-        this.element.insertBefore(task.element, this.element.firstChild);
+
+        let taskList = this.element.querySelector('ul');
+        taskList.insertBefore(task.element, taskList.firstChild);
 
         task.element.addEventListener('click', () => {
             this.activateTask(task);
         });
-
-        this.activateTask(task);
     }
 
     activateTask(task) {
@@ -145,6 +192,13 @@ class App {
         EventBus.addEventListener('closeTaskEditPanel', () => {
             this.switchToViewMode();
             this.taskEditPanel.hide();
+        });
+
+        let forms = document.querySelectorAll('form');
+        forms.forEach((form) => {
+            form.addEventListener('submit', (event) => {
+                event.preventDefault();
+            });
         });
     }
 
