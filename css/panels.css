@@ -32,22 +32,22 @@
     box-shadow: 0px 2px 2px -1px rgba(50, 50, 50, 0.15);
 }
 
-/* Task Panel */
+/* Task List Panel */
 
-.task-panel {
+.panels.view-mode .task-list-panel {
     max-width: 1000px;
     margin: 0px auto;
 }
 
-.task-panel.editing-task {
+.panels.edit-mode .task-list-panel {
     flex-basis: 10%;
     max-width: initial;
     margin: initial;
 }
 
-/* Task Panel - Toolbar */
+/* Task List Panel - Toolbar */
 
-.task-panel .btn-add-task {
+.task-list-panel .btn-add-task {
     color: #14aaf5;
     background-color: #fff;
     padding: 0px 9px;
@@ -61,7 +61,7 @@
             border-radius: 3px;
 }
 
-.task-panel .btn-settings {
+.task-list-panel .btn-settings {
     float: right;
     background-color: #fff;
     border: 0px;
@@ -73,24 +73,24 @@
     cursor: pointer;
 }
 
-/* Task Panel - Task List */
+/* Task List Panel - Task List */
 
-.task-panel .task-list ul {
+.task-list-panel .task-list ul {
     list-style-type: none;
 }
 
-.task-panel .task-list ul li {
+.task-list-panel .task-list ul li {
     display: block;
     font-weight: normal;
     height: 35px;
     line-height: 35px;
 }
 
-.task-panel .task-list ul li.task {
+.task-list-panel .task-list ul li.task {
     cursor: pointer;
 }
 
-.task-panel .task-list ul li span {
+.task-list-panel .task-list ul li span {
     display: inherit;
     line-height: inherit;
     height: inherit;
@@ -99,33 +99,33 @@
     padding-left: 30px;
 }
 
-.task-panel .task-list ul li.task > span {
+.task-list-panel .task-list ul li.task > span {
     background: url(../img/icons/checked-20x20.png) left center no-repeat;
 }
 
-.task-panel .task-list ul li.task:hover {
+.task-list-panel .task-list ul li.task:hover {
     background-color: #edf8ff;
 }
 
-.task-panel .task-list ul li.active {
+.task-list-panel .task-list ul li.active {
     background: #edf8ff url(../img/icons/caret-right-16x16.png) right 13px center no-repeat;
 }
 
-.task-panel .task-list ul li.task:hover > span,
-.task-panel .task-list ul li.active > span {
+.task-list-panel .task-list ul li.task:hover > span,
+.task-list-panel .task-list ul li.active > span {
     background: url(../img/icons/circle-16x16.png) center right no-repeat;
     border: 0px;
 }
 
-/* Edit Task Panel */
+/* Task Edit Panel */
 
-.edit-task-panel {
+.task-edit-panel {
     margin-left: 15px;
 }
 
-/* Edit Task Panel - Toolbar */
+/* Task Edit Panel - Toolbar */
 
-.edit-task-panel .user-info {
+.task-edit-panel .user-info {
     float: left;
     display: inline-block;
     margin: 10px 30px;
@@ -133,12 +133,12 @@
     line-height: 30px;
 }
 
-.edit-task-panel .user-info .profile-image {
+.task-edit-panel .user-info .profile-image {
     float: left;
     margin-right: 10px;
 }
 
-.edit-task-panel .user-info .circle {
+.task-edit-panel .user-info .circle {
     display: inline-block;
     vertical-align: middle;
     width: 16px;
@@ -146,21 +146,21 @@
     background: url(../img/icons/circle-16x16.png) center -1px no-repeat;
 }
 
-.edit-task-panel .task-options {
+.task-edit-panel .task-options {
     float: left;
     display: inline-block;
     line-height: 30px;
     margin: 10px 30px;
 }
 
-.edit-task-panel .task-options .due-date {
+.task-edit-panel .task-options .due-date {
     float: left;
     color: #89939d;
     margin-left: 10px;
     margin-right: 12px;
 }
 
-.edit-task-panel .task-options .btn {
+.task-edit-panel .task-options .btn {
     float: left;
     width: 30px;
     height: 30px;
@@ -172,29 +172,29 @@
     margin-left: 5px;
 }
 
-.edit-task-panel .task-options .btn-schedule {
+.task-edit-panel .task-options .btn-schedule {
     margin-left: 0px;
     border: 1px dashed #b7bfc6;
     background: url(../img/icons/calendar-16x16.png) center center no-repeat;
 }
 
-.edit-task-panel .task-options .btn-like {
+.task-edit-panel .task-options .btn-like {
     background: url(../img/icons/heart-16x16.png) center center no-repeat;
 }
 
-.edit-task-panel .task-options .btn-sort {
+.task-edit-panel .task-options .btn-sort {
     background: url(../img/icons/sort-16x16.png) center center no-repeat;
 }
 
-.edit-task-panel .task-options .btn-attach {
+.task-edit-panel .task-options .btn-attach {
     background: url(../img/icons/paper-clip-16x16.png) center center no-repeat;
 }
 
-.edit-task-panel .task-options .btn-more-options {
+.task-edit-panel .task-options .btn-more-options {
     background: url(../img/icons/more-options-16x16.png) center center no-repeat;
 }
 
-.edit-task-panel .btn-close {
+.task-edit-panel .btn-close {
     float: right;
     display: block;
     width: 20px;
@@ -207,20 +207,20 @@
     margin: 8px;
 }
 
-/* Edit Task Panel - Content */
+/* Task Edit Panel - Content */
 
-.edit-task-panel .content fieldset {
+.task-edit-panel .content fieldset {
     padding: 55px 30px 55px 20px;
 }
 
-.edit-task-panel .content fieldset input,
-.edit-task-panel .content fieldset textarea {
+.task-edit-panel .content fieldset input,
+.task-edit-panel .content fieldset textarea {
     display: block;
     width: 100%;
 }
 
 
-.edit-task-panel .content fieldset input {
+.task-edit-panel .content fieldset input {
     height: 42px;
     padding: 0px 10px 0px 50px;
     margin-bottom: 5px;
@@ -228,18 +228,18 @@
     background: url(../img/icons/checked-30x30.png) 9px center no-repeat;
 }
 
-.edit-task-panel .content fieldset .description {
+.task-edit-panel .content fieldset .description {
     padding-left: 40px;
 }
 
-.edit-task-panel .content fieldset .description textarea {
+.task-edit-panel .content fieldset .description textarea {
     font-weight: normal;
     padding: 10px;
 }
 
-/* Edit Task Panel - Comment */
+/* Task Edit Panel - Comment */
 
-.edit-task-panel .comment {
+.task-edit-panel .comment {
     height: 120px;
     position: absolute;
     left: 0;
@@ -250,17 +250,17 @@
     padding: 10px 30px;
 }
 
-.edit-task-panel .comment img {
+.task-edit-panel .comment img {
     float: left;
     display: inline-block;
     margin-right: 10px;
 }
 
-.edit-task-panel .comment fieldset {
+.task-edit-panel .comment fieldset {
     height: 100px;
 }
 
-.edit-task-panel .comment fieldset textarea {
+.task-edit-panel .comment fieldset textarea {
     width: 100%;
     height: inherit;
     padding: 10px;

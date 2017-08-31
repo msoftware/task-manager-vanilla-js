@@ -1,31 +1,8 @@
 'use strict';
 
-class EventBusClass {
-    constructor() {
-        this.listeners = {};
-    }
-
-    addEventListener(type, callback) {
-        if (typeof this.listeners[type] !== 'undefined') {
-            this.listeners[type].push({ callback: callback });
-        } else {
-            this.listeners[type] = [{ callback: callback }];
-        }
-    }
-
-    dispatch(type, data) {
-        if (this.listeners[type] !== 'undefined') {
-            let listeners = this.listeners[type].slice();
-            for (let i = 0; i < listeners.length; i++) {
-                if (listeners[i] && listeners[i].callback) {
-                    listeners[i].callback.call(this, data);
-                }
-            }
-        }
-    }
-}
-
-window.EventBus = new EventBusClass();
+ready(() => {
+    new App();
+});
 
 class Task {
     constructor(title, description) {
@@ -35,42 +12,30 @@ class Task {
         this.description = description;
     }
 
+    get title() {
+        return this.element.firstChild.innerText;
+    }
+
+    set title(newValue) {
+        this.element.firstChild.innerText = newValue;
+    }
+
     getElement() {
         let li = document.createElement('li');
         li.classList.add('task');
 
         let span = document.createElement('span');
 
-        let text = document.createTextNode(this.title);
-
-        span.appendChild(text);
         li.appendChild(span);
 
         return li;
     }
 }
 
-class EditTaskPanel {
+class TaskEditPanel {
     constructor() {
         this.element = this.getElement();
         this.setUpListeners();
-    }
-
-    getElement() {
-        return document.querySelector('.edit-task-panel');
-    }
-
-    setUpListeners() {
-        let closeBtn = this.element.querySelector('.btn-close');
-        closeBtn.addEventListener('click', () => {
-            document.dispatch('closeEditTaskPanel');
-        });
-
-        let titleInput = this.element.querySelector('input');
-        titleInput.addEventListener('keyup', () => {
-            this.activeTask.title = titleInput.value;
-            EventBus.dispatch('taskChanged', this.activeTask);
-        });
     }
 
     get activeTask() { 
@@ -89,9 +54,33 @@ class EditTaskPanel {
             description.innerHTML = task.description;
         }
     }
+
+    getElement() {
+        return document.querySelector('.task-edit-panel');
+    }
+
+    setUpListeners() {
+        let closeBtn = this.element.querySelector('.btn-close');
+        closeBtn.addEventListener('click', () => {
+            EventBus.dispatch('closeTaskEditPanel');
+        });
+
+        let titleInput = this.element.querySelector('input');
+        titleInput.addEventListener('keyup', () => {
+            this.activeTask.title = titleInput.value;
+        });
+    }
+
+    show() {
+        this.element.classList.remove('hide');
+    }
+
+    hide() {
+        this.element.classList.add('hide');
+    }
 }
 
-class TaskPanel {
+class TaskListPanel {
     constructor() {
         this.element = this.getElement();
         this.setUpListeners();
@@ -105,7 +94,7 @@ class TaskPanel {
     }
 
     setUpListeners() {
-        let addTaskButton = document.querySelector('.task-panel .toolbar .btn-add-task');
+        let addTaskButton = document.querySelector('.task-list-panel .toolbar .btn-add-task');
         addTaskButton.addEventListener('click', () => {
             this.addTask(new Task('', ''));
         });
@@ -131,7 +120,7 @@ class TaskPanel {
         });
         task.element.classList.add('active');
 
-        EventBus.dispatch('openEditTaskPanel', task);
+        EventBus.dispatch('openTaskEditPanel', task);
     }
 }
 
@@ -139,37 +128,35 @@ class App {
     constructor() {
         this.listeners = {};
 
-        this.taskPanel = new TaskPanel();
-        this.editTaskPanel = new EditTaskPanel();
+        this.taskListPanel = new TaskListPanel();
+        this.taskEditPanel = new TaskEditPanel();
 
         this.setUpListeners();
     }
 
     setUpListeners() {
-        EventBus.addEventListener('openEditTaskPanel', (task) => {
-            this.taskPanel.element.classList.add('editing-task');
-            this.editTaskPanel.element.classList.remove('hide');
+        EventBus.addEventListener('openTaskEditPanel', (task) => {
+            this.switchToEditMode();
+            this.taskEditPanel.show();
 
-            this.editTaskPanel.activeTask = task;
+            this.taskEditPanel.activeTask = task;
         });
 
-        EventBus.addEventListener('closeEditTaskPanel', () => {
-            this.taskPanel.element.classList.remove('editing-task');
-            this.editTaskPanel.element.classList.add('hide');
-        });
-
-        EventBus.addEventListener('taskChanged', (task) => {
-            let activeTask = this.taskPanel.activeTask;
-
-            if (activeTask) {
-                let span = activeTask.element.querySelector('span');
-                span.innerHTML = task.title;
-            }
+        EventBus.addEventListener('closeTaskEditPanel', () => {
+            this.switchToViewMode();
+            this.taskEditPanel.hide();
         });
     }
+
+    switchToViewMode() {
+        let panels = document.querySelector('.panels');
+        panels.classList.remove('edit-mode');
+        panels.classList.add('view-mode');
+    }
+
+    switchToEditMode() {
+        let panels = document.querySelector('.panels');
+        panels.classList.remove('view-mode');
+        panels.classList.add('edit-mode');
+    }
 }
-
-
-document.ready(() => {
-    new App();
-});

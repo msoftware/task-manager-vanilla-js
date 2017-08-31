@@ -6,7 +6,7 @@
     <title>Task Manager Vanilla JS</title>
 
     <link rel="stylesheet" href="css/styles.css">
-    <script type="text/javascript" src="js/functions.js"></script>
+    <script type="text/javascript" src="js/globals.js"></script>
     <script type="text/javascript" src="js/scripts.js"></script>
 </head>
 <body>
@@ -47,8 +47,9 @@
         </div>
     </header>
 
-    <section class="panels">
-        <div class="panel task-panel">
+    <section class="panels view-mode">
+
+        <div class="panel task-list-panel">
             <div class="toolbar">
                 <button class="btn-add-task">Add Task</button>
                 <button class="btn-settings"></button>
@@ -78,7 +79,7 @@
             </div>
         </div>
 
-        <div class="panel edit-task-panel hide">
+        <div class="panel task-edit-panel hide">
             <div class="toolbar">
                 <div class="user-info">
                     <img src="img/profile-200x200.jpg" class="profile-image"> Thomas Anderson
@@ -118,6 +119,7 @@
                 </form>
             </div>
         </div>
+
     </section>
 </body>
 </html>
