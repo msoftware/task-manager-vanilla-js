@@ -90,6 +90,10 @@
     cursor: pointer;
 }
 
+.task-list-panel .task-list ul li.dragging {
+    display: none !important;
+}
+
 .task-list-panel .task-list ul li span {
     display: inherit;
     line-height: inherit;
@@ -115,6 +119,19 @@
 .task-list-panel .task-list ul li.active > span {
     background: url(../img/icons/circle-16x16.png) center right no-repeat;
     border: 0px;
+}
+
+.task-list-panel .task-list ul li.insert-before:before,
+.task-list-panel .task-list ul li.insert-after:after {
+    content: '';
+    display: block;
+    height: 35px;
+    background-color: #fafafa;
+}
+
+.task-list-panel .task-list ul li.insert-before,
+.task-list-panel .task-list ul li.insert-after {
+    margin-bottom: 35px;
 }
 
 /* Task Edit Panel */

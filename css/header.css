@@ -19,6 +19,7 @@ header nav .menu {
     float: left;
     list-style-type: none;
     height: inherit;
+    position: absolute;
 }
 
 header nav .menu li {

@@ -6,9 +6,8 @@ ready(() => {
 
 class Task {
     constructor(id, title, description) {
-        this.element = this.getElement();
-
         this.id = id || Number(new Date()).toString(36);
+        this.element = this.getElement();
         this.title = title || '';
         this.description = description || '';
     }
@@ -23,7 +22,9 @@ class Task {
 
     getElement() {
         let li = document.createElement('li');
+        li.id = this.id;
         li.classList.add('task');
+        li.setAttribute('draggable', true);
 
         let span = document.createElement('span');
 
@@ -33,7 +34,9 @@ class Task {
     }
 
     save() {
-        localStorage.setItem(this.id, this.serialize());
+        if (this.title !== '' || this.description !== '') {
+            localStorage.setItem(this.id, this.serialize());
+        }
     }
 
     serialize() {
@@ -137,6 +140,97 @@ class TaskListPanel {
             this.addTask(task);
             this.activateTask(task);
         });
+
+        let taskList = this.element.querySelector('ul');
+
+        let validTargetItem = (target) => {
+            if (target.nodeName === 'SPAN') {
+                return target.parentElement;
+            } else if (target.nodeName === 'LI') {
+                return target;
+            } else {
+                return null;
+            }
+        };
+
+        let shouldMoveItem = (target, pos) => {
+            let draggedItem = document.querySelector('.task-list-panel .task-list .dragging');
+            let previousSibling = draggedItem.previousElementSibling;
+            let nextSibling = draggedItem.nextElementSibling;
+
+            let isSameTargetItem = (target === draggedItem);
+            let isMovingUpKeepingPos = (target === previousSibling && pos >= target.offsetHeight/2);
+            let isMovingDownKeepingPos = (target === nextSibling && pos <= target.offsetHeight/2);
+
+            if (isSameTargetItem || isMovingUpKeepingPos || isMovingDownKeepingPos) {
+                return false;
+            }
+            return true;
+        };
+
+        let resetTaskClasses = () => {
+            let allElements = taskList.querySelectorAll('.task.insert-before, .task.insert-after');
+            allElements.forEach((element) => {
+                element.classList.remove('insert-before');
+                element.classList.remove('insert-after');
+            });
+        };
+
+        // Needed to know if the dragged item is out of the drop area
+        // or just out of a child element.
+        // Explanation here: https://stackoverflow.com/a/21002544/3542459
+        let enteredDropAreaCounter = 0;
+
+        taskList.addEventListener('dragenter', (event) => {
+            event.preventDefault();
+            enteredDropAreaCounter++;
+        });
+
+        taskList.addEventListener('dragleave', (event) => {
+            event.preventDefault();
+            enteredDropAreaCounter--;
+            if (enteredDropAreaCounter === 0) {
+                resetTaskClasses();
+            }
+        });
+
+        taskList.addEventListener('dragover', (event) => {
+            event.preventDefault();
+
+            resetTaskClasses();
+
+            let targetItem = validTargetItem(event.target);
+            let pos = event.offsetY;
+
+            if (targetItem && shouldMoveItem(targetItem, pos)) {
+                if (pos <= targetItem.offsetHeight/2) {
+                    targetItem.classList.add('insert-before');
+                } else {
+                    targetItem.classList.add('insert-after');
+                }
+            }
+        });
+
+        taskList.addEventListener('drop', (event) => {
+            event.preventDefault();
+
+            enteredDropAreaCounter = 0;
+            resetTaskClasses();
+
+            let taskId = event.dataTransfer.getData('taskId');
+            let draggedItem = document.getElementById(taskId);
+
+            let targetItem = validTargetItem(event.target);
+            let pos = event.offsetY;
+
+            if (targetItem) {
+                if (pos >= targetItem.offsetHeight/2) {
+                    taskList.insertBefore(draggedItem, targetItem.nextElementSibling);
+                } else {
+                    taskList.insertBefore(draggedItem, targetItem);
+                }
+            }
+        });
     }
 
     loadTasks() {
@@ -156,6 +250,19 @@ class TaskListPanel {
         task.element.addEventListener('click', () => {
             this.activateTask(task);
         });
+
+        task.element.addEventListener('dragstart', (event) => {
+            event.dataTransfer.setData('taskId', event.target.id);
+            event.dataTransfer.effectAllowed = 'move';
+            event.dataTransfer.dropEffect = 'move';
+            setTimeout(() => {
+                event.target.classList.add('dragging');
+            });
+        });
+
+        task.element.addEventListener('dragend', (event) => {
+            event.target.classList.remove('dragging');
+        });
     }
 
     activateTask(task) {
@@ -165,9 +272,14 @@ class TaskListPanel {
         allTaskElements.forEach((taskElement) => {
             taskElement.classList.remove('active');
         });
-        task.element.classList.add('active');
+        this.activeTask.element.classList.add('active');
 
         EventBus.dispatch('openTaskEditPanel', task);
+    }
+
+    deactivateTask() {
+        this.activeTask.element.classList.remove('active');
+        this.activeTask = null;
     }
 }
 
@@ -192,6 +304,7 @@ class App {
         EventBus.addEventListener('closeTaskEditPanel', () => {
             this.switchToViewMode();
             this.taskEditPanel.hide();
+            this.taskListPanel.deactivateTask();
         });
 
         let forms = document.querySelectorAll('form');
