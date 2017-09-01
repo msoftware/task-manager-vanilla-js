@@ -39,6 +39,11 @@ class Task {
         localStorage.setItem(this.id, this.serialize());
     }
 
+    remove() {
+        this.element.remove();
+        localStorage.removeItem(this.id);
+    }
+
     serialize() {
         return JSON.stringify({
             id: this.id,
@@ -67,12 +72,14 @@ class TaskEditPanel {
     set activeTask(task) {
         this.currentTask = task;
 
-        let title = this.element.querySelector('input');
-        title.value = task.title;
-        title.focus();
+        if (this.currentTask) {
+            let title = this.element.querySelector('input');
+            title.value = this.currentTask.title;
+            title.focus();
 
-        let description = this.element.querySelector('textarea');
-        description.value = task.description;
+            let description = this.element.querySelector('textarea');
+            description.value = this.currentTask.description;
+        }
     }
 
     getElement() {
@@ -110,12 +117,13 @@ class TaskEditPanel {
         });
     }
 
-    show() {
+    open() {
         this.element.classList.remove('hide');
     }
 
-    hide() {
+    close() {
         this.element.classList.add('hide');
+        this.activeTask = null;
     }
 }
 
@@ -293,6 +301,11 @@ class TaskListPanel {
         });
     }
 
+    removeTask(task) {
+        delete this.tasks[task.id];
+        task.remove();
+    }
+
     activateTask(task) {
         this.activeTask = task;
 
@@ -306,8 +319,17 @@ class TaskListPanel {
     }
 
     deactivateTask() {
-        this.activeTask.element.classList.remove('active');
-        this.activeTask = null;
+        if (this.activeTask) {
+            this.activeTask.element.classList.remove('active');
+            this.activeTask = null;
+        }
+    }
+
+    clearEmptyTask() {
+        if (this.activeTask && this.activeTask.title === '' && this.activeTask.description === '') {
+            this.removeTask(this.activeTask);
+            this.updateTasksOrder();
+        }
     }
 
     updateTasksOrder() {
@@ -334,14 +356,15 @@ class App {
     setUpListeners() {
         EventBus.addEventListener('openTaskEditPanel', (task) => {
             this.switchToEditMode();
-            this.taskEditPanel.show();
+            this.taskEditPanel.open();
 
             this.taskEditPanel.activeTask = task;
         });
 
         EventBus.addEventListener('closeTaskEditPanel', () => {
             this.switchToViewMode();
-            this.taskEditPanel.hide();
+            this.taskEditPanel.close();
+            this.taskListPanel.clearEmptyTask();
             this.taskListPanel.deactivateTask();
         });
 
