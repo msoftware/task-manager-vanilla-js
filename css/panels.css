@@ -40,9 +40,9 @@
 }
 
 .panels.edit-mode .task-list-panel {
-    flex-basis: 10%;
     max-width: initial;
     margin: initial;
+    flex-basis: 10%;
 }
 
 /* Task List Panel - Toolbar */
@@ -293,3 +293,32 @@
     font-weight: normal;
 }
 
+/* Animations */
+
+@keyframes open-panel {
+    from {
+        transform: translateY(100%);
+    }
+    to {
+        transform: translateY(0%);
+    }
+}
+
+@keyframes close-panel {
+    from {
+        transform: translateY(0%);
+    }
+    to {
+        transform: translateY(100%);
+    }
+}
+
+.open-panel {
+    animation-name: open-panel;
+    animation-duration: 0.5s;
+}
+
+.close-panel {
+    animation-name: close-panel;
+    animation-duration: 0.5s;
+}

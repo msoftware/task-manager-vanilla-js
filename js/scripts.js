@@ -119,11 +119,19 @@ class TaskEditPanel {
 
     open() {
         this.element.classList.remove('hide');
+        this.element.classList.add('open-panel');
     }
 
     close() {
-        this.element.classList.add('hide');
         this.activeTask = null;
+
+        this.element.classList.remove('open-panel');
+        
+        this.element.classList.add('close-panel');
+        setTimeout(() => {
+            this.element.classList.remove('close-panel');
+            this.element.classList.add('hide');
+        }, 500);
     }
 }
 
@@ -308,7 +316,7 @@ class TaskListPanel {
     removeTask(task) {
         delete this.tasks[task.id];
         task.remove();
-        
+
         this.addPlaceholder();
     }
 
@@ -411,8 +419,10 @@ class App {
 
     switchToViewMode() {
         let panels = document.querySelector('.panels');
-        panels.classList.remove('edit-mode');
-        panels.classList.add('view-mode');
+        setTimeout(() => {
+            panels.classList.remove('edit-mode');
+            panels.classList.add('view-mode');
+        }, 500);
     }
 
     switchToEditMode() {
