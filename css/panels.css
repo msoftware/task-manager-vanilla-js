@@ -129,6 +129,10 @@
     margin-bottom: 35px;
 }
 
+.task-list-panel .task-list ul li.placeholder {
+    pointer-events: none;
+}
+
 /* Task Edit Panel */
 
 .task-edit-panel {

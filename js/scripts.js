@@ -127,6 +127,8 @@ class TaskEditPanel {
     }
 }
 
+const MAX_PLACEHOLDERS = 12;
+
 class TaskListPanel {
     constructor() {
         this.element = this.getElement();
@@ -299,11 +301,15 @@ class TaskListPanel {
         task.element.addEventListener('dragend', (event) => {
             event.target.classList.remove('dragging');
         });
+
+        this.removePlaceholder();
     }
 
     removeTask(task) {
         delete this.tasks[task.id];
         task.remove();
+        
+        this.addPlaceholder();
     }
 
     activateTask(task) {
@@ -340,6 +346,33 @@ class TaskListPanel {
             this.tasks[taskElement.id].order = order;
             this.tasks[taskElement.id].save();
         });
+    }
+
+    addPlaceholder() {
+        let taskList = this.element.querySelector('ul');
+
+        let listItems = taskList.querySelectorAll('li');
+        if (listItems.length < MAX_PLACEHOLDERS) {
+            let li = document.createElement('li');
+            li.classList.add('placeholder');
+
+            let span = document.createElement('span');
+            li.appendChild(span);
+
+            taskList.appendChild(li);
+        }
+    }
+
+    removePlaceholder() {
+        let taskList = this.element.querySelector('ul');
+
+        let listItems = taskList.querySelectorAll('li');
+        if (listItems.length > MAX_PLACEHOLDERS) {
+            let placeholder = taskList.querySelector('.placeholder');
+            if (placeholder) {
+                placeholder.remove();
+            }
+        }
     }
 }
 
