@@ -75,6 +75,15 @@
 
 /* Task List Panel - Task List */
 
+.task-list-panel .task-list {
+    position: absolute;
+    top: 50px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    overflow-y: scroll;
+}
+
 .task-list-panel .task-list ul {
     list-style-type: none;
 }
