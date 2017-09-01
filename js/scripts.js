@@ -5,8 +5,9 @@ ready(() => {
 });
 
 class Task {
-    constructor(id, title, description) {
+    constructor(id, order, title, description) {
         this.id = id || Number(new Date()).toString(36);
+        this.order = order || -1;
         this.element = this.getElement();
         this.title = title || '';
         this.description = description || '';
@@ -22,8 +23,9 @@ class Task {
 
     getElement() {
         let li = document.createElement('li');
-        li.id = this.id;
         li.classList.add('task');
+        li.setAttribute('id', this.id);
+        li.setAttribute('data-order', this.order);
         li.setAttribute('draggable', true);
 
         let span = document.createElement('span');
@@ -34,14 +36,13 @@ class Task {
     }
 
     save() {
-        if (this.title !== '' || this.description !== '') {
-            localStorage.setItem(this.id, this.serialize());
-        }
+        localStorage.setItem(this.id, this.serialize());
     }
 
     serialize() {
         return JSON.stringify({
             id: this.id,
+            order: this.order,
             title: this.title,
             description: this.description
         });
@@ -49,7 +50,7 @@ class Task {
 
     static deserialize(str) {
         let obj = JSON.parse(str);
-        return new Task(obj.id, obj.title, obj.description);
+        return new Task(obj.id, obj.order, obj.title, obj.description);
     }
 }
 
@@ -123,7 +124,7 @@ class TaskListPanel {
         this.element = this.getElement();
         this.setUpListeners();
 
-        this.tasks = [];
+        this.tasks = {};
         this.activeTask = null;
 
         this.loadTasks();
@@ -139,6 +140,7 @@ class TaskListPanel {
             let task = new Task();
             this.addTask(task);
             this.activateTask(task);
+            this.updateTasksOrder();
         });
 
         let taskList = this.element.querySelector('ul');
@@ -148,9 +150,8 @@ class TaskListPanel {
                 return target.parentElement;
             } else if (target.nodeName === 'LI') {
                 return target;
-            } else {
-                return null;
             }
+            return null;
         };
 
         let shouldMoveItem = (target, pos) => {
@@ -203,13 +204,16 @@ class TaskListPanel {
             let pos = event.offsetY;
 
             if (targetItem) {
+                // Drop area for new position
                 if (shouldMoveItem(targetItem, pos)) {
                     if (pos <= targetItem.offsetHeight/2) {
                         targetItem.classList.add('insert-before');
                     } else {
                         targetItem.classList.add('insert-after');
                     }
-                } else {
+                }
+                // Drop area for same position
+                else {
                     let draggedItem = taskList.querySelector('.dragging');
                     let previousSibling = draggedItem.previousElementSibling;
                     let nextSibling = draggedItem.nextElementSibling;
@@ -241,23 +245,35 @@ class TaskListPanel {
                 } else {
                     taskList.insertBefore(draggedItem, targetItem);
                 }
+                this.updateTasksOrder();
             }
         });
     }
 
     loadTasks() {
+        let tasks = [];
+
         let keys = Object.keys(localStorage);
         keys.forEach((key) => {
-            let task = Task.deserialize(localStorage[key]);
+            tasks.push(Task.deserialize(localStorage[key]));
+        });
+
+        tasks.sort((left, right) => {
+            let l = left.order;
+            let r = right.order;
+            return ((l > r) ? -1 : ((l < r) ? 1 : 0));
+        });
+
+        tasks.forEach((task) => {
             this.addTask(task);
         });
     }
 
     addTask(task) {
-        this.tasks.push(task);
+        this.tasks[task.id] = task;
 
         let taskList = this.element.querySelector('ul');
-        taskList.insertBefore(task.element, taskList.firstChild);
+        taskList.insertBefore(task.element, taskList.firstElementChild);
 
         task.element.addEventListener('click', () => {
             this.activateTask(task);
@@ -280,7 +296,7 @@ class TaskListPanel {
     activateTask(task) {
         this.activeTask = task;
 
-        let allTaskElements = this.element.querySelectorAll('.task');
+        let allTaskElements = this.element.querySelectorAll('.task.active');
         allTaskElements.forEach((taskElement) => {
             taskElement.classList.remove('active');
         });
@@ -292,6 +308,16 @@ class TaskListPanel {
     deactivateTask() {
         this.activeTask.element.classList.remove('active');
         this.activeTask = null;
+    }
+
+    updateTasksOrder() {
+        let taskList = this.element.querySelector('ul');
+        let taskElements = taskList.querySelectorAll('.task');
+        taskElements.forEach((taskElement, order) => {
+            taskElement.setAttribute('data-order', order);
+            this.tasks[taskElement.id].order = order;
+            this.tasks[taskElement.id].save();
+        });
     }
 }
 
