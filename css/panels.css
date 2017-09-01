@@ -61,6 +61,11 @@
             border-radius: 3px;
 }
 
+.task-list-panel .btn-add-task:active {
+    border-color: #2682af;
+    color: #2682af;
+}
+
 .task-list-panel .btn-settings {
     float: right;
     background-color: #fff;
@@ -195,6 +200,10 @@
     border: 1px solid #b7bfc6;
     border-radius: 50%;
     margin-left: 5px;
+}
+
+.task-edit-panel .task-options .btn:hover {
+    border-color: #151b26;
 }
 
 .task-edit-panel .task-options .btn-schedule {

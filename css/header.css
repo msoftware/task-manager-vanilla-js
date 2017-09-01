@@ -13,6 +13,16 @@ header nav {
     height: inherit;
 }
 
+header nav a {
+    text-decoration: none;
+    color: inherit;
+    transition: 0.2s color;
+}
+
+header nav a:hover {
+    color: #151b26;
+}
+
 /* Menu */
 
 header nav .menu {
@@ -30,8 +40,6 @@ header nav .menu li {
 
 header nav .menu li a {
     display: block;
-    text-decoration: none;
-    color: inherit;
     padding: 0px 15px;
     line-height: 40px;
     height: inherit;
@@ -87,11 +95,6 @@ header .user-options {
     display: block;
     height: inherit;
     line-height: 40px;
-}
-
-header .user-options a {
-    color: inherit;
-    text-decoration: none;
 }
 
 header .user-options .help {
