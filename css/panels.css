@@ -107,15 +107,10 @@
     background: url(../img/icons/checked-20x20.png) left center no-repeat;
 }
 
-.task-list-panel .task-list ul li.task:hover {
-    background-color: #edf8ff;
-}
-
 .task-list-panel .task-list ul li.active {
     background: #edf8ff url(../img/icons/caret-right-16x16.png) right 13px center no-repeat;
 }
 
-.task-list-panel .task-list ul li.task:hover > span,
 .task-list-panel .task-list ul li.active > span {
     background: url(../img/icons/circle-16x16.png) center right no-repeat;
     border: 0px;

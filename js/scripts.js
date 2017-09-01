@@ -134,7 +134,7 @@ class TaskListPanel {
     }
 
     setUpListeners() {
-        let addTaskButton = document.querySelector('.task-list-panel .toolbar .btn-add-task');
+        let addTaskButton = this.element.querySelector('.btn-add-task');
         addTaskButton.addEventListener('click', () => {
             let task = new Task();
             this.addTask(task);
@@ -154,7 +154,7 @@ class TaskListPanel {
         };
 
         let shouldMoveItem = (target, pos) => {
-            let draggedItem = document.querySelector('.task-list-panel .task-list .dragging');
+            let draggedItem = taskList.querySelector('.dragging');
             let previousSibling = draggedItem.previousElementSibling;
             let nextSibling = draggedItem.nextElementSibling;
 
@@ -202,11 +202,23 @@ class TaskListPanel {
             let targetItem = validTargetItem(event.target);
             let pos = event.offsetY;
 
-            if (targetItem && shouldMoveItem(targetItem, pos)) {
-                if (pos <= targetItem.offsetHeight/2) {
-                    targetItem.classList.add('insert-before');
+            if (targetItem) {
+                if (shouldMoveItem(targetItem, pos)) {
+                    if (pos <= targetItem.offsetHeight/2) {
+                        targetItem.classList.add('insert-before');
+                    } else {
+                        targetItem.classList.add('insert-after');
+                    }
                 } else {
-                    targetItem.classList.add('insert-after');
+                    let draggedItem = taskList.querySelector('.dragging');
+                    let previousSibling = draggedItem.previousElementSibling;
+                    let nextSibling = draggedItem.nextElementSibling;
+
+                    if (previousSibling) {
+                        previousSibling.classList.add('insert-after');
+                    } else if (nextSibling) {
+                        nextSibling.classList.add('insert-before');
+                    }
                 }
             }
         });
