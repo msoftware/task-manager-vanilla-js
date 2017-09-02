@@ -1,10 +1,9 @@
 'use strict';
 
-ready(() => {
-    new App();
-});
+const MAX_PLACEHOLDERS = 12;
 
 class Task {
+
     constructor(id, order, title, description) {
         this.id = id || Number(new Date()).toString(36);
         this.order = order || -1;
@@ -60,6 +59,7 @@ class Task {
 }
 
 class TaskEditPanel {
+
     constructor() {
         this.element = this.getElement();
         this.setUpListeners();
@@ -135,11 +135,11 @@ class TaskEditPanel {
     }
 }
 
-const MAX_PLACEHOLDERS = 12;
-
 class TaskListPanel {
+
     constructor() {
         this.element = this.getElement();
+        this.handler = new DragDropHandler();
         this.setUpListeners();
 
         this.tasks = {};
@@ -152,6 +152,10 @@ class TaskListPanel {
         return document.querySelector('.task-list-panel');
     }
 
+    getList() {
+        return this.element.querySelector('ul');
+    }
+
     setUpListeners() {
         let addTaskButton = this.element.querySelector('.btn-add-task');
         addTaskButton.addEventListener('click', () => {
@@ -161,69 +165,21 @@ class TaskListPanel {
             this.updateTasksOrder();
         });
 
-        let taskList = this.element.querySelector('ul');
+        let taskList = this.getList();
 
-        let validTargetItem = (target) => {
-            if (target.nodeName === 'SPAN') {
-                return target.parentElement;
-            } else if (target.nodeName === 'LI') {
-                return target;
-            }
-            return null;
-        };
+        this.handler.dragEnter(taskList);
 
-        let shouldMoveItem = (target, pos) => {
-            let draggedItem = taskList.querySelector('.dragging');
-            let previousSibling = draggedItem.previousElementSibling;
-            let nextSibling = draggedItem.nextElementSibling;
+        this.handler.dragLeave(taskList, TaskListUtil.resetTaskClasses);
 
-            let isSameTargetItem = (target === draggedItem);
-            let isMovingUpKeepingPos = (target === previousSibling && pos >= target.offsetHeight/2);
-            let isMovingDownKeepingPos = (target === nextSibling && pos <= target.offsetHeight/2);
+        this.handler.dragOver(taskList, () => {
+            TaskListUtil.resetTaskClasses();
 
-            if (isSameTargetItem || isMovingUpKeepingPos || isMovingDownKeepingPos) {
-                return false;
-            }
-            return true;
-        };
-
-        let resetTaskClasses = () => {
-            let allElements = taskList.querySelectorAll('.task.insert-before, .task.insert-after');
-            allElements.forEach((element) => {
-                element.classList.remove('insert-before');
-                element.classList.remove('insert-after');
-            });
-        };
-
-        // Needed to know if the dragged item is out of the drop area
-        // or just out of a child element.
-        // Explanation here: https://stackoverflow.com/a/21002544/3542459
-        let enteredDropAreaCounter = 0;
-
-        taskList.addEventListener('dragenter', (event) => {
-            event.preventDefault();
-            enteredDropAreaCounter++;
-        });
-
-        taskList.addEventListener('dragleave', (event) => {
-            event.preventDefault();
-            enteredDropAreaCounter--;
-            if (enteredDropAreaCounter === 0) {
-                resetTaskClasses();
-            }
-        });
-
-        taskList.addEventListener('dragover', (event) => {
-            event.preventDefault();
-
-            resetTaskClasses();
-
-            let targetItem = validTargetItem(event.target);
+            let targetItem = TaskListUtil.validTargetItem(event.target);
             let pos = event.offsetY;
 
             if (targetItem) {
                 // Drop area for new position
-                if (shouldMoveItem(targetItem, pos)) {
+                if (TaskListUtil.shouldMoveItem(targetItem, pos)) {
                     if (pos <= targetItem.offsetHeight/2) {
                         targetItem.classList.add('insert-before');
                     } else {
@@ -245,16 +201,13 @@ class TaskListPanel {
             }
         });
 
-        taskList.addEventListener('drop', (event) => {
-            event.preventDefault();
-
-            enteredDropAreaCounter = 0;
-            resetTaskClasses();
+        this.handler.drop(taskList, () => {
+            TaskListUtil.resetTaskClasses();
 
             let taskId = event.dataTransfer.getData('taskId');
             let draggedItem = document.getElementById(taskId);
 
-            let targetItem = validTargetItem(event.target);
+            let targetItem = TaskListUtil.validTargetItem(event.target);
             let pos = event.offsetY;
 
             if (targetItem) {
@@ -290,14 +243,14 @@ class TaskListPanel {
     addTask(task) {
         this.tasks[task.id] = task;
 
-        let taskList = this.element.querySelector('ul');
+        let taskList = this.getList();
         taskList.insertBefore(task.element, taskList.firstElementChild);
 
         task.element.addEventListener('click', () => {
             this.activateTask(task);
         });
 
-        task.element.addEventListener('dragstart', (event) => {
+        this.handler.dragStart(task.element, (event) => {
             event.dataTransfer.setData('taskId', event.target.id);
             event.dataTransfer.effectAllowed = 'move';
             event.dataTransfer.dropEffect = 'move';
@@ -306,7 +259,7 @@ class TaskListPanel {
             });
         });
 
-        task.element.addEventListener('dragend', (event) => {
+        this.handler.dragEnd(task.element, (event) => {
             event.target.classList.remove('dragging');
         });
 
@@ -347,7 +300,7 @@ class TaskListPanel {
     }
 
     updateTasksOrder() {
-        let taskList = this.element.querySelector('ul');
+        let taskList = this.getList();
         let taskElements = taskList.querySelectorAll('.task');
         taskElements.forEach((taskElement, order) => {
             taskElement.setAttribute('data-order', order);
@@ -357,8 +310,7 @@ class TaskListPanel {
     }
 
     addPlaceholder() {
-        let taskList = this.element.querySelector('ul');
-
+        let taskList = this.getList();
         let listItems = taskList.querySelectorAll('li');
         if (listItems.length < MAX_PLACEHOLDERS) {
             let li = document.createElement('li');
@@ -372,8 +324,7 @@ class TaskListPanel {
     }
 
     removePlaceholder() {
-        let taskList = this.element.querySelector('ul');
-
+        let taskList = this.getList();
         let listItems = taskList.querySelectorAll('li');
         if (listItems.length > MAX_PLACEHOLDERS) {
             let placeholder = taskList.querySelector('.placeholder');
@@ -381,51 +332,5 @@ class TaskListPanel {
                 placeholder.remove();
             }
         }
-    }
-}
-
-class App {
-    constructor() {
-        this.taskListPanel = new TaskListPanel();
-        this.taskEditPanel = new TaskEditPanel();
-
-        this.setUpListeners();
-    }
-
-    setUpListeners() {
-        EventBus.addEventListener('openTaskEditPanel', (task) => {
-            this.switchToEditMode();
-            this.taskEditPanel.open();
-
-            this.taskEditPanel.activeTask = task;
-        });
-
-        EventBus.addEventListener('closeTaskEditPanel', () => {
-            this.switchToViewMode();
-            this.taskEditPanel.close();
-            this.taskListPanel.clearEmptyTask();
-            this.taskListPanel.deactivateTask();
-        });
-
-        let forms = document.querySelectorAll('form');
-        forms.forEach((form) => {
-            form.addEventListener('submit', (event) => {
-                event.preventDefault();
-            });
-        });
-    }
-
-    switchToViewMode() {
-        let panels = document.querySelector('.panels');
-        setTimeout(() => {
-            panels.classList.remove('edit-mode');
-            panels.classList.add('view-mode');
-        }, 500);
-    }
-
-    switchToEditMode() {
-        let panels = document.querySelector('.panels');
-        panels.classList.remove('view-mode');
-        panels.classList.add('edit-mode');
     }
 }
