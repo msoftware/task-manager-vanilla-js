@@ -6,7 +6,9 @@ A task manager built with pure JavaScript.
 
 ## Features
 
-* Create/Edit/Delete tasks
+* Create/edit/delete tasks
+* Sort task list using drag and drop
+* Offline capabilities
 
 ## Release Notes
 
@@ -18,7 +20,7 @@ Version 0.1.0
 
 | <img src="http://res.cloudinary.com/dm7h7e8xj/image/upload/v1504312118/chrome-128x128_toojvd.png" width="48px" height="48px" alt="Chrome logo"> |
 |:---:|
-| 42+ ✔ |
+| 59+ ✔ |
 
 ## TO DO
 
@@ -29,6 +31,7 @@ Version 0.1.0
 * Implement navigation items
 * Implement sidebar menu
 * Implement user profile
+* Improve SEO
 
 ## Author
 
