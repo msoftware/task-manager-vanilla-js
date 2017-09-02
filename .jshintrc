@@ -1,7 +1,0 @@
-{
-    "globals": {
-        "console": true,
-        "ready": true,
-        "EventBus": true
-    }
-}

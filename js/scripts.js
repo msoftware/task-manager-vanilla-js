@@ -126,7 +126,7 @@ class TaskEditPanel {
         this.activeTask = null;
 
         this.element.classList.remove('open-panel');
-        
+
         this.element.classList.add('close-panel');
         setTimeout(() => {
             this.element.classList.remove('close-panel');
@@ -386,8 +386,6 @@ class TaskListPanel {
 
 class App {
     constructor() {
-        this.listeners = {};
-
         this.taskListPanel = new TaskListPanel();
         this.taskEditPanel = new TaskEditPanel();
 
